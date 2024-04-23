@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build": "echo 'Build steps can go here'"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^1.0.0",
