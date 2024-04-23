@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, SafeAreaView, Animated, Easing } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ScrollView, SafeAreaView, Animated, Easing, Image } from 'react-native';
 import ModalComponent from './components/start';
 import CreateMeetingModal from './components/sched';
 import JoinMeetingModal from './components/join';
@@ -42,7 +42,10 @@ const App = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <View style={[styles.header, isSidebarOpen && styles.headerWithSidebar]}>
-        <Ionicons name="camera-outline" size={24} color="white" style={[styles.cameraIcon, styles.alignLeft]} />
+      <Image
+      source={require('./assets/logo.png')} // Update the path accordingly
+      style={[styles.cameraIcon, styles.alignLeft]} // Apply any additional styles if needed
+    />
         <TouchableOpacity onPress={() => setSidebarOpen(!isSidebarOpen)}>
           <Ionicons name="menu-outline" size={24} color="white" style={[styles.burgerIcon, styles.alignfarRight]} />
         </TouchableOpacity>
@@ -50,15 +53,16 @@ const App = () => {
       </View>
   
       {isSidebarOpen && (
-        <View style={styles.sidebar}>
-          <TouchableOpacity style={styles.closeButton} onPress={() => setSidebarOpen(false)}>
-            <Ionicons name="close-outline" size={24} color="white" />
-          </TouchableOpacity>
-          <Text style={styles.sidebarHeader}>KonekTa!</Text> {/* Set header to "KonekTa!" */}
-          <TouchableOpacity
-            style={[styles.sidebarItem, selectedItem === 0 && styles.selectedItem]} // Apply different style for the selected item
-            onPress={() => handleSidebarItemClick(0)}
-          >
+       <View style={styles.sidebar}>
+       <TouchableOpacity style={styles.closeButton} onPress={() => setSidebarOpen(false)}>
+         <Ionicons name="close-outline" size={24} color="white" />
+       </TouchableOpacity>
+       <Image source={require('./assets/logo.png')} />
+       {/* <Text style={styles.sidebarHeader}>KonekTa!</Text>  */}
+       <TouchableOpacity
+         style={[styles.sidebarItem, selectedItem === 0 && styles.selectedItem]} // Apply different style for the selected item
+         onPress={() => handleSidebarItemClick(0)}
+       >
             <Ionicons name="home" size={24} color="white" />
             <Text style={styles.sidebarText}>Home</Text>
           </TouchableOpacity>
@@ -66,14 +70,16 @@ const App = () => {
             style={[styles.sidebarItem, selectedItem === 1 && styles.selectedItem]} // Apply different style for the selected item
             onPress={() => handleSidebarItemClick(1)}
           >
-            <Ionicons name="settings-outline" size={24} color="white" />
+            <Image
+      source={require('./assets/upcoming.png')} />
             <Text style={styles.sidebarText}>Upcoming</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.sidebarItem, selectedItem === 2 && styles.selectedItem]} // Apply different style for the selected item
             onPress={() => handleSidebarItemClick(2)}
           >
-            <Ionicons name="notifications-outline" size={24} color="white" />
+            <Image
+           source={require('./assets/previous.png')} />
             <Text style={styles.sidebarText}>Previous</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -173,6 +179,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#181d27',
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   header: {
     width: '100%',
     backgroundColor: '#222937',
@@ -216,6 +227,7 @@ const styles = StyleSheet.create({
   sidebarHeader:{
     color: 'white',
     fontSize: 13,
+    paddingLeft: 70,
   },
   closeButton: {
     position: 'absolute',
@@ -242,24 +254,7 @@ const styles = StyleSheet.create({
   },
   cameraIcon:{
     marginBottom: 10,
-    fontSize: 30,
-  },
-  alignLeft: {
-    marginRight: 0,
-    marginLeft: 10,
-  },
-  alignRight: {
-    marginLeft: 0,
-    marginRight: 10,
-  },
-  alignfarRight: {
-    marginLeft: 300,
-    marginRight: 10,
-  },
-  scrollViewContent: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontSize: 10,
   },
   content: {
     width: '100%',
@@ -367,6 +362,14 @@ const styles = StyleSheet.create({
   buttonSubtext: {
     color: 'white',
     fontSize: 18,
+  },
+  
+  alignLeft: {
+    marginRight: 10,
+  },
+
+  alignfarRight: {
+    marginLeft: 280,
   },
 });
 
