@@ -4,6 +4,11 @@ import ModalComponent from './components/start';
 import CreateMeetingModal from './components/sched';
 import JoinMeetingModal from './components/join';
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons from Expo
+import UpcomingPage from './pages/upcomingpage';
+import PreviousPage from './pages/previouspage';
+import RecordingsPage from './pages/recordings';
+import PersonalRoom from './pages/personalroom';
+
 
 const App = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -11,15 +16,18 @@ const App = () => {
   const [joinModalVisible, setJoinModalVisible] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0); // Track the selected sidebar item
+  const [currentPage, setCurrentPage] = useState('home'); // Track the current page
+
   const sidebarAnimation = useRef(new Animated.Value(0)).current; // Animation value for sidebar
 
   const joinMeeting = (link: any) => {
     console.log('Joining meeting with link:', link);
   };
 
-  const handleSidebarItemClick = (index: number) => {
+  const handleSidebarItemClick = (index: number, pageName: string) => {
     setSelectedItem(index);
-    // Handle navigation or other actions here
+    setCurrentPage(pageName); // Update the current page based on the selected sidebar item
+    setSidebarOpen(false); // Close the sidebar when an item is clicked
   };
 
   const toggleSidebar = () => {
@@ -42,129 +50,156 @@ const App = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <View style={[styles.header, isSidebarOpen && styles.headerWithSidebar]}>
-      <Image
-      source={require('./assets/logo.png')} // Update the path accordingly
-      style={[styles.cameraIcon, styles.alignLeft]} // Apply any additional styles if needed
-    />
+        <Image
+          source={require('./assets/logo.png')} // Update the path accordingly
+          style={[styles.cameraIcon, styles.alignLeft]} // Apply any additional styles if needed
+        />
         <TouchableOpacity onPress={() => setSidebarOpen(!isSidebarOpen)}>
           <Ionicons name="menu-outline" size={24} color="white" style={[styles.burgerIcon, styles.alignfarRight]} />
         </TouchableOpacity>
         <Ionicons name="person-circle-outline" size={24} color="white" style={[styles.personIcon, styles.alignLeft]} />
       </View>
-  
+
       {isSidebarOpen && (
-       <View style={styles.sidebar}>
-       <TouchableOpacity style={styles.closeButton} onPress={() => setSidebarOpen(false)}>
-         <Ionicons name="close-outline" size={24} color="white" />
-       </TouchableOpacity>
-       <Image source={require('./assets/logo.png')} />
-       {/* <Text style={styles.sidebarHeader}>KonekTa!</Text>  */}
-       <TouchableOpacity
-         style={[styles.sidebarItem, selectedItem === 0 && styles.selectedItem]} // Apply different style for the selected item
-         onPress={() => handleSidebarItemClick(0)}
-       >
+        <View style={styles.sidebar}>
+          <TouchableOpacity style={styles.closeButton} onPress={() => setSidebarOpen(false)}>
+            <Ionicons name="close-outline" size={24} color="white" />
+          </TouchableOpacity>
+          <Image source={require('./assets/logo.png')} />
+          <TouchableOpacity
+            style={[styles.sidebarItem, selectedItem === 0 && styles.selectedItem]}
+            onPress={() => handleSidebarItemClick(0, 'home')}
+          >
             <Ionicons name="home" size={24} color="white" />
             <Text style={styles.sidebarText}>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.sidebarItem, selectedItem === 1 && styles.selectedItem]} // Apply different style for the selected item
-            onPress={() => handleSidebarItemClick(1)}
+            style={[styles.sidebarItem, selectedItem === 1 && styles.selectedItem]}
+            onPress={() => handleSidebarItemClick(1, 'upcoming')}
           >
-            <Image
-      source={require('./assets/upcoming.png')} />
+            <Image source={require('./assets/upcoming.png')} />
             <Text style={styles.sidebarText}>Upcoming</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.sidebarItem, selectedItem === 2 && styles.selectedItem]} // Apply different style for the selected item
-            onPress={() => handleSidebarItemClick(2)}
+            style={[styles.sidebarItem, selectedItem === 2 && styles.selectedItem]}
+            onPress={() => handleSidebarItemClick(2, 'previous')}
           >
-            <Image
-           source={require('./assets/previous.png')} />
+            <Image source={require('./assets/previous.png')} />
             <Text style={styles.sidebarText}>Previous</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.sidebarItem, selectedItem === 3 && styles.selectedItem]} // Apply different style for the selected item
-            onPress={() => handleSidebarItemClick(3)}
+            style={[styles.sidebarItem, selectedItem === 3 && styles.selectedItem]}
+            onPress={() => handleSidebarItemClick(3, 'recordings')}
           >
             <Ionicons name="videocam-outline" size={24} color="white" />
             <Text style={styles.sidebarText}>Recordings</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.sidebarItem, selectedItem === 4 && styles.selectedItem]} // Apply different style for the selected item
-            onPress={() => handleSidebarItemClick(4)}
+            style={[styles.sidebarItem, selectedItem === 4 && styles.selectedItem]}
+            onPress={() => handleSidebarItemClick(4, 'personal')}
           >
             <Ionicons name="add" size={24} color="white" />
             <Text style={styles.sidebarText}>Personal Room</Text>
           </TouchableOpacity>
         </View>
       )}
-  
+
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.content}>
-          <View style={styles.card}>
-            <Text style={styles.upcomingMeetingText}>Upcoming Meeting at: 12:30 PM</Text>
-            <Text style={styles.timeText}>11:13 PM</Text>
-            <Text style={styles.dateText}>Monday, April 22, 2024</Text>
+        {currentPage === 'home' && (
+          <View style={styles.content}>
+            {/* Home page content */}
+            <View style={styles.card}>
+              <Text style={styles.upcomingMeetingText}>Upcoming Meeting at: 12:30 PM</Text>
+              <Text style={styles.timeText}>11:13 PM</Text>
+              <Text style={styles.dateText}>Monday, April 22, 2024</Text>
+            </View>
+            <ModalComponent
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+            />
+            <CreateMeetingModal
+              isModalVisible={isCreateMeetingModalVisible}
+              setModalVisible={setCreateMeetingModalVisible}
+            />
+            <TouchableOpacity
+              style={[styles.button, styles.green]}
+              onPress={() => setModalVisible(true)}
+            >
+              <View style={styles.buttonContent}>
+                <Ionicons name="add-outline" size={24} color="white" style={styles.icon} />
+                <Text style={[styles.buttonText, styles.lowerleft]}>New Meeting</Text>
+                <View style={styles.lowerLeftsub}>
+                  <Text style={styles.buttonSubtext}>Start an instant meeting</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.blue]}
+              onPress={() => setCreateMeetingModalVisible(true)}
+            >
+              <View style={styles.buttonContent}>
+                <Ionicons name="calendar-outline" size={24} color="white" style={styles.icon} />
+                <Text style={[styles.buttonText, styles.lowerleft]}>Schedule Meeting</Text>
+                <View style={styles.lowerLeftsub}>
+                  <Text style={styles.buttonSubtext}>Plan your meeting</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.red]}
+              onPress={() => {}}
+            >
+              <View style={styles.buttonContent}>
+                <Ionicons name="videocam-outline" size={24} color="white" style={styles.icon} />
+                <Text style={[styles.buttonText, styles.lowerleft]}>View Recordings</Text>
+                <View style={styles.lowerLeftsub}>
+                  <Text style={styles.buttonSubtext}>Check out your recordings</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.yellow]}
+              onPress={() => setJoinModalVisible(true)}
+            >
+              <View style={styles.buttonContent}>
+                <Ionicons name="person-add-outline" size={24} color="white" style={styles.icon} />
+                <Text style={[styles.buttonText, styles.lowerleft]}>Join Meeting</Text>
+                <View style={styles.lowerLeftsub}>
+                  <Text style={styles.buttonSubtext}>Via invite link</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
-          <ModalComponent
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-          />
-          <CreateMeetingModal
-            isModalVisible={isCreateMeetingModalVisible}
-            setModalVisible={setCreateMeetingModalVisible}
-          />
-          <TouchableOpacity
-            style={[styles.button, styles.green]}
-            onPress={() => setModalVisible(true)}
-          >
-            <View style={styles.buttonContent}>
-              <Ionicons name="add-outline" size={24} color="white" style={styles.icon} />
-              <Text style={[styles.buttonText, styles.lowerleft]}>New Meeting</Text>
-              <View style={styles.lowerLeftsub}>
-                <Text style={styles.buttonSubtext}>Start an instant meeting</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.blue]}
-            onPress={() => setCreateMeetingModalVisible(true)}
-          >
-            <View style={styles.buttonContent}>
-              <Ionicons name="calendar-outline" size={24} color="white" style={styles.icon} />
-              <Text style={[styles.buttonText, styles.lowerleft]}>Schedule Meeting</Text>
-              <View style={styles.lowerLeftsub}>
-                <Text style={styles.buttonSubtext}>Plan your meeting</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.red]}
-            onPress={() => {}}
-          >
-            <View style={styles.buttonContent}>
-              <Ionicons name="videocam-outline" size={24} color="white" style={styles.icon} />
-              <Text style={[styles.buttonText, styles.lowerleft]}>View Recordings</Text>
-              <View style={styles.lowerLeftsub}>
-                <Text style={styles.buttonSubtext}>Check out your recordings</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.yellow]}
-            onPress={() => setJoinModalVisible(true)}
-          >
-            <View style={styles.buttonContent}>
-              <Ionicons name="person-add-outline" size={24} color="white" style={styles.icon} />
-              <Text style={[styles.buttonText, styles.lowerleft]}>Join Meeting</Text>
-              <View style={styles.lowerLeftsub}>
-                <Text style={styles.buttonSubtext}>Via invite link</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+        )}
+
+        {currentPage === 'upcoming' && (
+          <View style={styles.Pagecontent}>
+          <Text style={styles.largeText}>Upcoming Meeting</Text>
+          <Text style={styles.belowText}>No Upcoming Calls</Text>
         </View>
+        )}
+
+        {currentPage === 'previous' && (
+          <View style={styles.Pagecontent}>
+          <Text style={styles.largeText}>Previous Calls</Text>
+          <Text style={styles.belowText}>No Previous Calls</Text>
+        </View>
+        )}
+
+        {currentPage === 'recordings' && (
+          <View style={styles.Pagecontent}>
+          <Text style={styles.largeText}>Recordings</Text>
+          <Text style={styles.belowText}>No Recordings</Text>
+        </View>
+        )}
+
+        {currentPage === 'personal' && (
+          <View style={styles.Pagecontent}>
+          <Text style={styles.largeText}>Personal Meeting Room</Text>
+        </View>
+        )}
       </ScrollView>
-  
+
       <JoinMeetingModal
         isModalVisible={joinModalVisible}
         setModalVisible={setJoinModalVisible}
@@ -173,7 +208,6 @@ const App = () => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -262,6 +296,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     zIndex: 0, // Ensure the content is behind the sidebar
+  },
+  Pagecontent: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start', // Align items to the start (left)
+    justifyContent: 'flex-start', // Justify content to the start (top)
+    padding: 20,
+  },
+  largeText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: 'white',
+  },
+  belowText: {
+    fontSize: 18,
+    color: 'white',
   },
   card: {
     backgroundColor: '#2b3447',
