@@ -1,0 +1,35 @@
+{
+  "name": "jroom",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@clerk/clerk-expo": "^1.0.0",
+    "@clerk/clerk-react": "^5.0.0",
+    "@expo/metro-runtime": "~3.1.3",
+    "@react-native-community/datetimepicker": "^7.7.0",
+    "@react-navigation/native": "^6.1.17",
+    "expo": "~50.0.14",
+    "expo-status-bar": "~1.11.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.73.6",
+    "react-native-vector-icons": "^10.0.3",
+    "react-native-web": "~0.19.6",
+    "react-native-webrtc": "^118.0.7",
+    "react-router-dom": "^6.22.3",
+    "react-router-native": "^6.22.3",
+    "stream-chat-expo": "^5.27.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.2.45",
+    "typescript": "^5.1.3"
+  },
+  "private": true
+}
